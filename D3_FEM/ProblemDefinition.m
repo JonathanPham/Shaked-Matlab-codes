@@ -7,7 +7,7 @@ nDim=3;
 nEdgesElement=6; %this is actually the number of faces in 3D
 
 %Mesh parameters
-Params.Nx = 2^7;  % Number of elements along x-axis
+Params.Nx = 2^6;  % Number of elements along x-axis
 Params.Ny = 2^1;  % Number of elements along y-axis
 Params.Nz = 2^1;  % Number of elements along z-axis
 
@@ -40,10 +40,16 @@ X = permute(X,[2 1 3]);
 Y = permute(Y,[2 1 3]);
 Z=permute(Z,[2 1 3]);
 if (strcmpi(elementtype,'hex'))
-    Coord = [X(:), Y(:), Z(:)];
-    
+    Coord = [X(:), Y(:), Z(:)];    
     % Build IEN Array
     IEN=linIEN(Nx,Ny,Nz);
+elseif (strcmpi(elementtype,'tet'))
+    XYZ=[X(:), Y(:), Z(:)];
+    TRI = delaunayTriangulation(XYZ);
+    Coord=TRI.Points;
+    IEN=(TRI.ConnectivityList)';
+else
+    error('unsuported element type');
 end
 nNodes=size(Coord,1);
 nElements=size(IEN,2);

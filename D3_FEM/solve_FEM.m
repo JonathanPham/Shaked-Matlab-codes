@@ -1,9 +1,10 @@
 %% set up linear solve
-global ID nNodes nDoF EBC g Params Coord grav; 
+global ID IEN nNodes nDoF EBC g Params Coord grav; 
 tol=1e-8;
-elementtype='hex'; %set hex or tet
+elementtype='tet'; %set hex or tet - note tet performs much worse (due to shape function limitations
 ProblemDefinition(elementtype);
 [K,F]=Assembly(elementtype);
+%global IEN;
 %% solve linear system
 d2=K\F; %to compare
 nmax=length(F);

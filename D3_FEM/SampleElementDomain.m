@@ -1,4 +1,4 @@
-function [N,B,je] = SampleElementDomain(e1,e2,e3,e) % this works
+function [N,B,je] = SampleElementDomain(e1,e2,e3,e,elementtype) % this works
 global IEN  Coord  nNodesElement  nDoF;
 X = Coord(IEN(:,e),:);
 [Ne,dNe]=buildnlin_der(e1,e2,e3);

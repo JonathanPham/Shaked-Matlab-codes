@@ -1,6 +1,6 @@
-function [k_e, f_e, f_g, f_h]=linhex(e)
+function [k_e, f_e, f_g, f_h]=linhex(e,elementtype)
 global f  g  h  C  IEN  nDoF  nDim  nNodesElement...
-    nEdgesElement  elementType  Coord IEN NBC;
+    nEdgesElement  elementType  Coord NBC;
 %allocate
 k_e = zeros(nNodesElement*nDoF,nNodesElement*nDoF);
 f_e = zeros(nNodesElement*nDoF,1);
@@ -51,7 +51,7 @@ for i=1:nPoints
         for k=1:nPoints
             zeta=q(k);
             weight=w(i)*w(j)*w(k);
-            [N, B, je]=SampleElementDomain(xsi,eta,zeta,e);
+            [N, B, je]=SampleElementDomain(xsi,eta,zeta,e,elementtype);
             k_e=k_e+B'*D_e*B*je*weight;
             f_e=f_e+N'*f(e,:)'*je*weight;
         end

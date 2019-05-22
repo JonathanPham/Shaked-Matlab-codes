@@ -1,8 +1,9 @@
 %% set up linear solve
-global IEN ID nNodes nDoF EBC g Params Coord grav; 
-tol=1e-12;
-ProblemDefinition();
-[K,F]=Assembly();
+global ID nNodes nDoF EBC g Params Coord grav; 
+tol=1e-8;
+elementtype='hex'; %set hex or tet
+ProblemDefinition(elementtype);
+[K,F]=Assembly(elementtype);
 %% solve linear system
 d2=K\F; %to compare
 nmax=length(F);
@@ -14,8 +15,7 @@ nmax=length(F);
 % [d1]=gmres(M*K,guess,guess,nmax,tol);
 d1=zeros(nmax,1);
 d1=conj_g(K,d1,F,nmax,tol);
-
-max(d1-d2);
+mmx=max(d1-d2);
 %% constructing solution vector
 u=zeros(nNodes,nDoF);
 I=(EBC==0);

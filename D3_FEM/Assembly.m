@@ -1,9 +1,9 @@
-function [K F]=Assembly() %done
+function [K F]=Assembly(elementtype) %done
 global nEquations nElements nDoF ID LM h;
 K = spalloc(nEquations,nEquations,20*nEquations);
 F = spalloc(nEquations,1,nEquations);
 for e=1:nElements
-    [k_e, f_e, f_g, f_h]=linhex(e); %just need to define this
+    [k_e, f_e, f_g, f_h]=linhex(e,elementtype); %just need to define this
     P=LM(:,e);
     I=(P~=0);
     P=P(I);

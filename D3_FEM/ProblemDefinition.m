@@ -1,4 +1,4 @@
-function ProblemDefinition() 
+function ProblemDefinition(elementtype) 
 global nDim nNodes nElements nNodesElement nDoF nEquations ...
     nEdgesElement Coord ID IEN LM EBC Params f;
 %Solution paramaters
@@ -7,7 +7,7 @@ nDim=3;
 nEdgesElement=6; %this is actually the number of faces in 3D
 
 %Mesh parameters
-Params.Nx = 2^10;  % Number of elements along x-axis
+Params.Nx = 2^7;  % Number of elements along x-axis
 Params.Ny = 2^1;  % Number of elements along y-axis
 Params.Nz = 2^1;  % Number of elements along z-axis
 
@@ -39,11 +39,12 @@ z = linspace(-t,t,Nz+1);
 X = permute(X,[2 1 3]);
 Y = permute(Y,[2 1 3]);
 Z=permute(Z,[2 1 3]);
-Coord = [X(:), Y(:), Z(:)];
-
-% Build IEN Array
-IEN=linIEN(Nx,Ny,Nz);
-
+if (strcmpi(elementtype,'hex'))
+    Coord = [X(:), Y(:), Z(:)];
+    
+    % Build IEN Array
+    IEN=linIEN(Nx,Ny,Nz);
+end
 nNodes=size(Coord,1);
 nElements=size(IEN,2);
 nNodesElement=size(IEN,1);

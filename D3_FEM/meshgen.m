@@ -1,0 +1,22 @@
+model = createpde('structural','static-solid');
+model = createpde;
+importGeometry(model,'PlateSquareHolePlanar.stl');
+pdegplot(model);
+%%
+L=2^7;
+c=1;
+t=1;
+Nx=1;
+Ny=1;
+Nz=1;
+x = linspace(0,L,Nx+1);
+y = linspace(0,c,Ny+1);
+z = linspace(0,t,Nz+1);
+[X,Y,Z] = meshgrid(x,y,z);
+% X = permute(X,[2 1 3]);
+% Y = permute(Y,[2 1 3]);
+% Z=permute(Z,[2 1 3]);
+XYZ=[X(:), Y(:), Z(:)];
+TRIb = delaunayTriangulation(XYZ);
+XY=[X(:), Y(:)];
+TRI2b=delaunayTriangulation(XY);

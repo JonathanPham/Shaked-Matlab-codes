@@ -8,7 +8,7 @@ c  = Params.c;
 t=   Params.t;
 E = Params.E; 
 v = Params.v;
-grav=-9.8;
+grav=-1;
 %allocation
 C   = zeros(nElements,2); 
 % f   = spalloc(nElements,nDoF,0);

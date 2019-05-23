@@ -1,4 +1,4 @@
-function [k_e, f_e, f_g, f_h]=linhex(e,elementtype)
+function [k_e, f_e, f_g, f_h]=linhex(e,elementtype,order)
 global f  g  h  C  IEN  nDoF  nDim  nNodesElement...
     nEdgesElement  elementType  Coord NBC;
 %allocate
@@ -26,10 +26,10 @@ if (strcmpi(elementtype,'hex'))
     end
 elseif (strcmpi(elementtype,'tet'))
     nPoints=5;
-    w=1/6*[-4/5, 0.45, 0.45, 0.45, 0.45];
-    q=[1/4 1/2 1/6 1/6 1/6];
-    r=[1/4 1/6 1/2 1/6 1/6];
-    s=[1/4 1/6 1/6 1/2 1/6];
+    w=1/6*[-4/5, 0.45, 0.45, 0.45, 0.45]';
+    q=[1/4 1/2 1/6 1/6 1/6]';
+    r=[1/4 1/6 1/2 1/6 1/6]';
+    s=[1/4 1/6 1/6 1/2 1/6]';
 else
     error('unsuported element type');
 end
@@ -69,7 +69,7 @@ if (strcmpi(elementtype,'hex'))
     end
 elseif (strcmpi(elementtype,'tet'))
     for i=1:nPoints
-        [N, B, je]=SampleElementDomain(q(i),r(i),s(i),e,elementtype);
+        [N, B, je]=SampleElementDomain(q(i),r(i),s(i),e,elementtype,order);
         k_e=k_e+B'*D_e*B*je*w(i);
         f_e=f_e+N'*f(e,:)'*je*w(i);
     end

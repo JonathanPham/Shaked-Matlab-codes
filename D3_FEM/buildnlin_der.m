@@ -1,4 +1,4 @@
-function [Ne, dNe]=buildnlin_der(xi,eta,zeta,elementtype)
+function [Ne, dNe]=buildnlin_der(xi,eta,zeta,elementtype,order)
 if (strcmpi(elementtype,'hex'))
     dNe=1/8*[-(1-eta).*(1-zeta),(1-eta).*(1-zeta),(1+eta).*(1-zeta),...
         -(1+eta).*(1-zeta),-(1-eta).*(1+zeta),(1-eta).*(1+zeta),...
@@ -11,8 +11,18 @@ if (strcmpi(elementtype,'hex'))
         (1-xi).*(1+eta).*(1-zeta),(1-xi).*(1-eta).*(1+zeta),(1+xi).*(1-eta).*(1+zeta),...
         (1+xi).*(1+eta).*(1+zeta),(1-xi).*(1+eta).*(1+zeta)];
 elseif (strcmpi(elementtype,'tet'))
-    Ne=[xi, eta, zeta, 1-xi-eta-zeta];
-    dNe=[1 0 0 -1;0 1 0 -1; 0 0 1 -1];
+    switch order
+        case 1
+            Ne=[xi, eta, zeta, 1-xi-eta-zeta];
+            dNe=[1 0 0 -1;0 1 0 -1; 0 0 1 -1];
+        case 2 
+            Ne=[ xi*(2*xi - 1), eta*(2*eta - 1), zeta*(2*zeta - 1), (eta + xi + zeta - 1)*(2*eta + 2*xi + 2*zeta - 1), 4*eta*xi, 4*xi*zeta, -4*xi*(eta + xi + zeta - 1), 4*eta*zeta, -4*eta*(eta + xi + zeta - 1), -4*zeta*(eta + xi + zeta - 1)];
+            dNe=[4*xi - 1, 0, 0, 4*eta + 4*xi + 4*zeta - 3, 4*eta, 4*zeta, 4 - 8*xi - 4*zeta - 4*eta, 0, -4*eta, -4*zeta;...
+               0, 4*eta - 1, 0, 4*eta + 4*xi + 4*zeta - 3, 4*xi, 0, -4*xi, 4*zeta, 4 - 4*xi - 4*zeta - 8*eta, -4*zeta;...
+               0, 0, 4*zeta - 1, 4*eta + 4*xi + 4*zeta - 3, 0, 4*xi, -4*xi, 4*eta, -4*eta, 4 - 4*xi - 8*zeta - 4*eta];
+        otherwise
+            error('choose order 1 or 2');
+    end
 else
     error('unsuported element type');
 end

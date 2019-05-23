@@ -1,4 +1,4 @@
-function ProblemDefinition(elementtype) 
+function ProblemDefinition(elementtype,order) 
 global nDim nNodes nElements nNodesElement nDoF nEquations ...
     nEdgesElement Coord ID IEN LM EBC Params f;
 %Solution paramaters
@@ -7,7 +7,7 @@ nDim=3;
 nEdgesElement=6; %this is actually the number of faces in 3D
 
 %Mesh parameters
-Params.Nx = 2^6;  % Number of elements along x-axis
+Params.Nx = 2^7;  % Number of elements along x-axis
 Params.Ny = 2^1;  % Number of elements along y-axis
 Params.Nz = 2^1;  % Number of elements along z-axis
 
@@ -48,8 +48,11 @@ elseif (strcmpi(elementtype,'tet'))
     TRI = delaunayTriangulation(XYZ);
     Coord=TRI.Points;
     IEN=(TRI.ConnectivityList)';
+    if order==2
+        [Coord, IEN]=lin2quad(Coord, IEN);
+    end
 else
-    error('unsuported element type');
+    error('unsupported element type');
 end
 nNodes=size(Coord,1);
 nElements=size(IEN,2);

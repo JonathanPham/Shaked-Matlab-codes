@@ -1,4 +1,4 @@
-function [Coord, IENnew]=lin2quad(Coord,IEN)
+function [Coord, IENnew]=lin2quad(Coord,IEN,elementtype)
 nNodes=size(Coord,1);
 nElements=size(IEN,2);
 newn=6;

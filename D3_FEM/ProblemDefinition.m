@@ -32,24 +32,32 @@ c  = Params.c;
 t=   Params.t;
 
 % Build Mesh
-x = linspace(0,L,Nx+1);
-y = linspace(-c,c,Ny+1);
-z = linspace(-t,t,Nz+1);
+
+if (strcmpi(elementtype,'hex'))
+    x = linspace(0,L,order*Nx+1);
+    y = linspace(-c,c,order*Ny+1);
+    z = linspace(-t,t,order*Nz+1);
+end
+if (strcmpi(elementtype,'tet'))
+    x = linspace(0,L,Nx+1);
+    y = linspace(-c,c,Ny+1);
+    z = linspace(-t,t,Nz+1);
+end
 [X,Y,Z] = meshgrid(x,y,z);
 X = permute(X,[2 1 3]);
 Y = permute(Y,[2 1 3]);
 Z=permute(Z,[2 1 3]);
 if (strcmpi(elementtype,'hex'))
-    Coord = [X(:), Y(:), Z(:)];    
+    Coord = [X(:), Y(:), Z(:)];
     % Build IEN Array
-    IEN=linIEN(Nx,Ny,Nz);
+    IEN=quadIEN(Nx,Ny,Nz,order);
 elseif (strcmpi(elementtype,'tet'))
     XYZ=[X(:), Y(:), Z(:)];
     TRI = delaunayTriangulation(XYZ);
     Coord=TRI.Points;
     IEN=(TRI.ConnectivityList)';
     if order==2
-        [Coord, IEN]=lin2quad(Coord, IEN);
+        [Coord, IEN]=lin2quad(Coord, IEN,elementtype);
     end
 else
     error('unsupported element type');

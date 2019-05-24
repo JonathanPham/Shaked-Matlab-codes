@@ -61,7 +61,7 @@ if (strcmpi(elementtype,'hex'))
             for k=1:nPoints
                 zeta=q(k);
                 weight=w(i)*w(j)*w(k);
-                [N, B, je]=SampleElementDomain(xsi,eta,zeta,e,elementtype);
+                [N, B, je]=SampleElementDomain(xsi,eta,zeta,e,elementtype,order);
                 k_e=k_e+B'*D_e*B*je*weight;
                 f_e=f_e+N'*f(e,:)'*je*weight;
             end

@@ -55,3 +55,55 @@ IEN=(TRIb.ConnectivityList)';
 syms xi eta zeta alp Ne;
 alp=1-xi-eta-zeta;
 Ne=[xi*(2*xi-1) eta*(2*eta-1) zeta*(2*zeta-1) alp*(2*alp-1) 4*xi*eta 4*xi*zeta 4*xi*alp 4*eta*zeta 4*eta*alp 4*zeta*alp];
+%%
+L=1;
+c=1;
+t=1;
+Nx=1;
+Ny=1;
+Nz=1;
+order=2;
+x = linspace(-L,L,order*Nx+1);
+y = linspace(-c,c,order*Ny+1);
+z = linspace(-t,t,order*Nz+1);
+[X,Y,Z] = meshgrid(x,y,z);
+X = permute(X,[2 1 3]);
+Y = permute(Y,[2 1 3]);
+Z=permute(Z,[2 1 3]);
+XYZ=[X(:), Y(:), Z(:)];
+%% quad hex shape functions
+syms xi eta zeta L1 L2 L3 Ne;
+L1=[1/2*xi*(xi-1) 1/2*xi*(xi+1) 1-xi^2];
+L2=subs(L1,xi,eta);
+L3=subs(L1,xi,zeta);
+Ne=[L1(1)*L2(1)*L3(1) L1(2)*L2(1)*L3(1) L1(2)*L2(2)*L3(1) L1(1)*L2(2)*L3(1)...
+    L1(1)*L2(1)*L3(2) L1(2)*L2(1)*L3(2) L1(2)*L2(2)*L3(2) L1(1)*L2(2)*L3(2)...
+    L1(3)*L2(1)*L3(1) L1(2)*L2(3)*L3(1) L1(3)*L2(2)*L3(1) L1(1)*L2(3)*L3(1)...
+    L1(3)*L2(1)*L3(2) L1(2)*L2(3)*L3(2) L1(3)*L2(2)*L3(2) L1(1)*L2(3)*L3(2)...
+    L1(1)*L2(1)*L3(3) L1(2)*L2(1)*L3(3) L1(2)*L2(2)*L3(3) L1(1)*L2(2)*L3(3)...
+    L1(3)*L2(3)*L3(1) L1(3)*L2(3)*L3(2) L1(3)*L2(1)*L3(3) L1(3)*L2(2)*L3(3)...
+    L1(1)*L2(3)*L3(3) L1(2)*L2(3)*L3(3) L1(3)*L2(3)*L3(3)];
+dNe1=[ (eta*xi*zeta*(eta - 1)*(zeta - 1))/8 + (eta*zeta*(eta - 1)*(xi - 1)*(zeta - 1))/8, (eta*xi*zeta*(eta - 1)*(zeta - 1))/8 + (eta*zeta*(eta - 1)*(xi + 1)*(zeta - 1))/8, (eta*xi*zeta*(eta + 1)*(zeta - 1))/8 + (eta*zeta*(eta + 1)*(xi + 1)*(zeta - 1))/8, (eta*xi*zeta*(eta + 1)*(zeta - 1))/8 + (eta*zeta*(eta + 1)*(xi - 1)*(zeta - 1))/8, (eta*xi*zeta*(eta - 1)*(zeta + 1))/8 + (eta*zeta*(eta - 1)*(xi - 1)*(zeta + 1))/8, (eta*xi*zeta*(eta - 1)*(zeta + 1))/8 + (eta*zeta*(eta - 1)*(xi + 1)*(zeta + 1))/8, (eta*xi*zeta*(eta + 1)*(zeta + 1))/8 + (eta*zeta*(eta + 1)*(xi + 1)*(zeta + 1))/8, (eta*xi*zeta*(eta + 1)*(zeta + 1))/8 + (eta*zeta*(eta + 1)*(xi - 1)*(zeta + 1))/8, -(eta*xi*zeta*(eta - 1)*(zeta - 1))/2, - (xi*zeta*(eta^2 - 1)*(zeta - 1))/4 - (zeta*(eta^2 - 1)*(xi + 1)*(zeta - 1))/4, -(eta*xi*zeta*(eta + 1)*(zeta - 1))/2, - (xi*zeta*(eta^2 - 1)*(zeta - 1))/4 - (zeta*(eta^2 - 1)*(xi - 1)*(zeta - 1))/4, -(eta*xi*zeta*(eta - 1)*(zeta + 1))/2, - (xi*zeta*(eta^2 - 1)*(zeta + 1))/4 - (zeta*(eta^2 - 1)*(xi + 1)*(zeta + 1))/4, -(eta*xi*zeta*(eta + 1)*(zeta + 1))/2, - (xi*zeta*(eta^2 - 1)*(zeta + 1))/4 - (zeta*(eta^2 - 1)*(xi - 1)*(zeta + 1))/4, - (eta*xi*(zeta^2 - 1)*(eta - 1))/4 - (eta*(zeta^2 - 1)*(eta - 1)*(xi - 1))/4, - (eta*xi*(zeta^2 - 1)*(eta - 1))/4 - (eta*(zeta^2 - 1)*(eta - 1)*(xi + 1))/4, - (eta*xi*(zeta^2 - 1)*(eta + 1))/4 - (eta*(zeta^2 - 1)*(eta + 1)*(xi + 1))/4, - (eta*xi*(zeta^2 - 1)*(eta + 1))/4 - (eta*(zeta^2 - 1)*(eta + 1)*(xi - 1))/4, xi*zeta*(eta^2 - 1)*(zeta - 1), xi*zeta*(eta^2 - 1)*(zeta + 1), eta*xi*(zeta^2 - 1)*(eta - 1), eta*xi*(zeta^2 - 1)*(eta + 1), (xi*(eta^2 - 1)*(zeta^2 - 1))/2 + ((eta^2 - 1)*(zeta^2 - 1)*(xi - 1))/2, (xi*(eta^2 - 1)*(zeta^2 - 1))/2 + ((eta^2 - 1)*(zeta^2 - 1)*(xi + 1))/2, -2*xi*(eta^2 - 1)*(zeta^2 - 1)];
+            dNe2=[ (eta*xi*zeta*(xi - 1)*(zeta - 1))/8 + (xi*zeta*(eta - 1)*(xi - 1)*(zeta - 1))/8, (eta*xi*zeta*(xi + 1)*(zeta - 1))/8 + (xi*zeta*(eta - 1)*(xi + 1)*(zeta - 1))/8, (eta*xi*zeta*(xi + 1)*(zeta - 1))/8 + (xi*zeta*(eta + 1)*(xi + 1)*(zeta - 1))/8, (eta*xi*zeta*(xi - 1)*(zeta - 1))/8 + (xi*zeta*(eta + 1)*(xi - 1)*(zeta - 1))/8, (eta*xi*zeta*(xi - 1)*(zeta + 1))/8 + (xi*zeta*(eta - 1)*(xi - 1)*(zeta + 1))/8, (eta*xi*zeta*(xi + 1)*(zeta + 1))/8 + (xi*zeta*(eta - 1)*(xi + 1)*(zeta + 1))/8, (eta*xi*zeta*(xi + 1)*(zeta + 1))/8 + (xi*zeta*(eta + 1)*(xi + 1)*(zeta + 1))/8, (eta*xi*zeta*(xi - 1)*(zeta + 1))/8 + (xi*zeta*(eta + 1)*(xi - 1)*(zeta + 1))/8, - (eta*zeta*(xi^2 - 1)*(zeta - 1))/4 - (zeta*(xi^2 - 1)*(eta - 1)*(zeta - 1))/4, -(eta*xi*zeta*(xi + 1)*(zeta - 1))/2, - (eta*zeta*(xi^2 - 1)*(zeta - 1))/4 - (zeta*(xi^2 - 1)*(eta + 1)*(zeta - 1))/4, -(eta*xi*zeta*(xi - 1)*(zeta - 1))/2, - (eta*zeta*(xi^2 - 1)*(zeta + 1))/4 - (zeta*(xi^2 - 1)*(eta - 1)*(zeta + 1))/4, -(eta*xi*zeta*(xi + 1)*(zeta + 1))/2, - (eta*zeta*(xi^2 - 1)*(zeta + 1))/4 - (zeta*(xi^2 - 1)*(eta + 1)*(zeta + 1))/4, -(eta*xi*zeta*(xi - 1)*(zeta + 1))/2, - (eta*xi*(zeta^2 - 1)*(xi - 1))/4 - (xi*(zeta^2 - 1)*(eta - 1)*(xi - 1))/4, - (eta*xi*(zeta^2 - 1)*(xi + 1))/4 - (xi*(zeta^2 - 1)*(eta - 1)*(xi + 1))/4, - (eta*xi*(zeta^2 - 1)*(xi + 1))/4 - (xi*(zeta^2 - 1)*(eta + 1)*(xi + 1))/4, - (eta*xi*(zeta^2 - 1)*(xi - 1))/4 - (xi*(zeta^2 - 1)*(eta + 1)*(xi - 1))/4, eta*zeta*(xi^2 - 1)*(zeta - 1), eta*zeta*(xi^2 - 1)*(zeta + 1), (eta*(xi^2 - 1)*(zeta^2 - 1))/2 + ((xi^2 - 1)*(zeta^2 - 1)*(eta - 1))/2, (eta*(xi^2 - 1)*(zeta^2 - 1))/2 + ((xi^2 - 1)*(zeta^2 - 1)*(eta + 1))/2, eta*xi*(zeta^2 - 1)*(xi - 1), eta*xi*(zeta^2 - 1)*(xi + 1), -2*eta*(xi^2 - 1)*(zeta^2 - 1)];
+            dNe3=[ (eta*xi*zeta*(eta - 1)*(xi - 1))/8 + (eta*xi*(eta - 1)*(xi - 1)*(zeta - 1))/8, (eta*xi*zeta*(eta - 1)*(xi + 1))/8 + (eta*xi*(eta - 1)*(xi + 1)*(zeta - 1))/8, (eta*xi*zeta*(eta + 1)*(xi + 1))/8 + (eta*xi*(eta + 1)*(xi + 1)*(zeta - 1))/8, (eta*xi*zeta*(eta + 1)*(xi - 1))/8 + (eta*xi*(eta + 1)*(xi - 1)*(zeta - 1))/8, (eta*xi*zeta*(eta - 1)*(xi - 1))/8 + (eta*xi*(eta - 1)*(xi - 1)*(zeta + 1))/8, (eta*xi*zeta*(eta - 1)*(xi + 1))/8 + (eta*xi*(eta - 1)*(xi + 1)*(zeta + 1))/8, (eta*xi*zeta*(eta + 1)*(xi + 1))/8 + (eta*xi*(eta + 1)*(xi + 1)*(zeta + 1))/8, (eta*xi*zeta*(eta + 1)*(xi - 1))/8 + (eta*xi*(eta + 1)*(xi - 1)*(zeta + 1))/8, - (eta*zeta*(xi^2 - 1)*(eta - 1))/4 - (eta*(xi^2 - 1)*(eta - 1)*(zeta - 1))/4, - (xi*zeta*(eta^2 - 1)*(xi + 1))/4 - (xi*(eta^2 - 1)*(xi + 1)*(zeta - 1))/4, - (eta*zeta*(xi^2 - 1)*(eta + 1))/4 - (eta*(xi^2 - 1)*(eta + 1)*(zeta - 1))/4, - (xi*zeta*(eta^2 - 1)*(xi - 1))/4 - (xi*(eta^2 - 1)*(xi - 1)*(zeta - 1))/4, - (eta*zeta*(xi^2 - 1)*(eta - 1))/4 - (eta*(xi^2 - 1)*(eta - 1)*(zeta + 1))/4, - (xi*zeta*(eta^2 - 1)*(xi + 1))/4 - (xi*(eta^2 - 1)*(xi + 1)*(zeta + 1))/4, - (eta*zeta*(xi^2 - 1)*(eta + 1))/4 - (eta*(xi^2 - 1)*(eta + 1)*(zeta + 1))/4, - (xi*zeta*(eta^2 - 1)*(xi - 1))/4 - (xi*(eta^2 - 1)*(xi - 1)*(zeta + 1))/4, -(eta*xi*zeta*(eta - 1)*(xi - 1))/2, -(eta*xi*zeta*(eta - 1)*(xi + 1))/2, -(eta*xi*zeta*(eta + 1)*(xi + 1))/2, -(eta*xi*zeta*(eta + 1)*(xi - 1))/2, (zeta*(eta^2 - 1)*(xi^2 - 1))/2 + ((eta^2 - 1)*(xi^2 - 1)*(zeta - 1))/2, (zeta*(eta^2 - 1)*(xi^2 - 1))/2 + ((eta^2 - 1)*(xi^2 - 1)*(zeta + 1))/2, eta*zeta*(xi^2 - 1)*(eta - 1), eta*zeta*(xi^2 - 1)*(eta + 1), xi*zeta*(eta^2 - 1)*(xi - 1), xi*zeta*(eta^2 - 1)*(xi + 1), -2*zeta*(eta^2 - 1)*(xi^2 - 1)];
+            dNe=[dNe1; dNe2; dNe3];
+%%
+x=[-1 0 1]; 
+y=x;
+z=x;
+for i=1:3
+    zeta=x(i);
+    for j=1:3
+        eta=y(i);
+        for k=1:3
+            xi=x(i);
+            Ne=[ (eta*xi*zeta*(eta - 1)*(xi - 1)*(zeta - 1))/8, (eta*xi*zeta*(eta - 1)*(xi + 1)*(zeta - 1))/8, (eta*xi*zeta*(eta + 1)*(xi + 1)*(zeta - 1))/8, (eta*xi*zeta*(eta + 1)*(xi - 1)*(zeta - 1))/8, (eta*xi*zeta*(eta - 1)*(xi - 1)*(zeta + 1))/8, (eta*xi*zeta*(eta - 1)*(xi + 1)*(zeta + 1))/8, (eta*xi*zeta*(eta + 1)*(xi + 1)*(zeta + 1))/8, (eta*xi*zeta*(eta + 1)*(xi - 1)*(zeta + 1))/8, -(eta*zeta*(xi^2 - 1)*(eta - 1)*(zeta - 1))/4, -(xi*zeta*(eta^2 - 1)*(xi + 1)*(zeta - 1))/4, -(eta*zeta*(xi^2 - 1)*(eta + 1)*(zeta - 1))/4, -(xi*zeta*(eta^2 - 1)*(xi - 1)*(zeta - 1))/4, -(eta*zeta*(xi^2 - 1)*(eta - 1)*(zeta + 1))/4, -(xi*zeta*(eta^2 - 1)*(xi + 1)*(zeta + 1))/4, -(eta*zeta*(xi^2 - 1)*(eta + 1)*(zeta + 1))/4, -(xi*zeta*(eta^2 - 1)*(xi - 1)*(zeta + 1))/4, -(eta*xi*(zeta^2 - 1)*(eta - 1)*(xi - 1))/4, -(eta*xi*(zeta^2 - 1)*(eta - 1)*(xi + 1))/4, -(eta*xi*(zeta^2 - 1)*(eta + 1)*(xi + 1))/4, -(eta*xi*(zeta^2 - 1)*(eta + 1)*(xi - 1))/4, (zeta*(eta^2 - 1)*(xi^2 - 1)*(zeta - 1))/2, (zeta*(eta^2 - 1)*(xi^2 - 1)*(zeta + 1))/2, (eta*(xi^2 - 1)*(zeta^2 - 1)*(eta - 1))/2, (eta*(xi^2 - 1)*(zeta^2 - 1)*(eta + 1))/2, (xi*(eta^2 - 1)*(zeta^2 - 1)*(xi - 1))/2, (xi*(eta^2 - 1)*(zeta^2 - 1)*(xi + 1))/2, -(eta^2 - 1)*(xi^2 - 1)*(zeta^2 - 1)];
+            sum(Ne)
+        end
+    end
+end
+%%
+Nx=1;
+Ny=1;
+Nz=1;
+IEN=quadIEN(Nx,Ny,Nz);

@@ -25,7 +25,7 @@ if (strcmpi(elementtype,'tet'))
 end
 
 %Mesh parameters
-Params.Nx = 2^7;  % Number of elements along x-axis
+Params.Nx = 2^6;  % Number of elements along x-axis
 Params.Ny = 2^1;  % Number of elements along y-axis
 Params.Nz = 2^1;  % Number of elements along z-axis
 
@@ -38,8 +38,9 @@ Params.t =   1;      % Thickness of plate (0<z<t)
 Params.E = 10^7;     % Youngs Modulus
 Params.v = 0.25;     % Poisson Ratio
 
-% Parameters for Traction Conditions
+% Parameters for forces
 Params.P = 0;       % traction on z boundaries
+Params.grav=-1;
 
 %Mesh paramaters
 Nx = Params.Nx;

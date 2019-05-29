@@ -1,8 +1,8 @@
 %% set up linear solve
 clear all
-global ID IEN nNodes nDoF EBC g Params Coord grav NBC; 
+global ID IEN nNodes nDoF EBC g Params Coord NBC; 
 tol=1e-8;
-elementtype='tet'; %set hex or tet - note tet performs poorly for first order
+elementtype='hex'; %set hex or tet - note tet performs poorly for first order
 order=2; %set to 1 (linear) or 2 (quadratic) elements
 ProblemDefinition(elementtype,order);
 [K,F]=Assembly(elementtype,order);
@@ -38,6 +38,7 @@ c  = Params.c;
 t=   Params.t;
 Ix= 4/3*c^3*t;
 E = Params.E;
+grav=Params.grav;
 andef=grav*x.^2/24/Ix/L/E.*(2*L^2+(2*L-x).^2);
 
 figure

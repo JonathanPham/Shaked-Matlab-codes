@@ -1,6 +1,6 @@
 function init_data(elementtype)
 global nNodes nElements nNodesElement nDoF nEdgesElement ...
-    Coord EBC NBC IEN f g h C Params grav faces;
+    Coord EBC NBC IEN f g h C Params faces;
 %parameters
 tol=1e-8;
 L  = Params.L;
@@ -8,11 +8,11 @@ c  = Params.c;
 t=   Params.t;
 E = Params.E; 
 v = Params.v;
-grav=-1;
+grav=Params.grav;
 %allocation
 C   = zeros(nElements,2); 
 % f   = spalloc(nElements,nDoF,0);
-f= [zeros(nElements,1) grav*ones(nElements,1) zeros(nElements,1)]/L/c/t/4;
+%f= [zeros(nElements,1) grav*ones(nElements,1) zeros(nElements,1)]/L/c/t/4;
 g   = spalloc(nNodes,nDoF,round(nNodes/4)); 
 EBC = spalloc(nNodes,nDoF,round(nNodes/4));
 NBC = spalloc(nElements,nEdgesElement,round(nElements/4));  

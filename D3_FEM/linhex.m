@@ -61,17 +61,19 @@ if (strcmpi(elementtype,'hex'))
             for k=1:nPoints
                 zeta=q(k);
                 weight=w(i)*w(j)*w(k);
-                [N, B, je]=SampleElementDomain(xsi,eta,zeta,e,elementtype,order);
+                [N, B, je,f]=SampleElementDomain(xsi,eta,zeta,e,elementtype,order);
                 k_e=k_e+B'*D_e*B*je*weight;
-                f_e=f_e+N'*f(e,:)'*je*weight;
+                %f_e=f_e+N'*f(e,:)'*je*weight;
+                f_e=f_e+N'*f'*je*weight;
             end
         end
     end
 elseif (strcmpi(elementtype,'tet'))
     for i=1:nPoints
-        [N, B, je]=SampleElementDomain(q(i),r(i),s(i),e,elementtype,order);
+        [N, B, je,f]=SampleElementDomain(q(i),r(i),s(i),e,elementtype,order);
         k_e=k_e+B'*D_e*B*je*w(i);
-        f_e=f_e+N'*f(e,:)'*je*w(i);
+        %f_e=f_e+N'*f(e,:)'*je*w(i);
+        f_e=f_e+N'*f'*je*w(i);
     end
 end
 % %compute f_h - make general to include types and orders

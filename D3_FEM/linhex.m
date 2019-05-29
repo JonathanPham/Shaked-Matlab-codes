@@ -25,7 +25,7 @@ if (strcmpi(elementtype,'hex'))
             error('Choose 1-3 gaussian quadrature points');
     end
 elseif (strcmpi(elementtype,'tet'))
-    nPoints=5;
+    nPoints=5; %for domain
     w=1/6*[-4/5, 0.45, 0.45, 0.45, 0.45]';
     q=[1/4 1/2 1/6 1/6 1/6]';
     r=[1/4 1/6 1/2 1/6 1/6]';
@@ -74,18 +74,37 @@ elseif (strcmpi(elementtype,'tet'))
         f_e=f_e+N'*f(e,:)'*je*w(i);
     end
 end
-% %compute f_h - still need to define SampleElementEdge
-% for k=1:nEdgesElement
-%     for i=1:nPoints
-%         xsi=q(i);
-%         for j=1:nPoints
-%             eta=q(j);
-%             weight=w(i)*w(j);
-%             [N, h, je]=SampleElementEdge(xsi,eta,e,k); %define this function
-%             f_h=f_h+weight*N'*h*je;
-%         end
-%     end
-% end
+% %compute f_h - make general to include types and orders
+
+if (strcmpi(elementtype,'hex'))
+    for k=1:nEdgesElement
+        if NBC(e,k)~=0
+            for i=1:nPoints
+                xsi=q(i);
+                for j=1:nPoints
+                    eta=q(j);
+                    weight=w(i)*w(j);
+                    [N, h, je]=SampleElementEdge(xsi,eta,e,k,elementtype,order); %define this function
+                    f_h=f_h+weight*N'*h*je;
+                end
+            end
+        end
+    end
+elseif (strcmpi(elementtype,'tet'))
+    nPoints=3;
+    w=[1 1 1]'/6;
+    q=[2/3 1/6 1/6]';
+    r=[1/6 2/3 1/6]';
+    for k=1:nEdgesElement
+        if NBC(e,k)~=0
+            for i=1:nPoints
+                [N, h, je]=SampleElementEdge(q(i),r(i),e,k,elementtype,order); %define this function
+                f_h=f_h+w(i)*N'*h*je;
+            end
+        end
+    end
+end
+
 % compute f_g
 g_e=g(IEN(:,e),:)';
 f_g=-k_e*g_e(:);

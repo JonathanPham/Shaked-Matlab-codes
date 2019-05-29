@@ -4,15 +4,14 @@ P = Params.P;
 L = Params.L;
 c = Params.c;
 t = Params.t;
-K1 =  3*P*L*t/(2*c^2);
-K2 = -3*P*t/(4*c);
-K3=0;
-switch NBC(k,e)
-    case 1
-        h = [K1*(y/c),  K2*(1-(y/c)^2) , K3]';
+K1 =  P/L/c/2;
+K2 = -P/L/c/2;
+switch NBC(e,k)
+    case 5
+        h = [0, K1 , 0]';
         
-    case 2
-        h = [       0, -K2*(1-(y/c)^2), K3 ]';
+    case 6
+        h = [       0, K2, 0]';
         
 end
 end

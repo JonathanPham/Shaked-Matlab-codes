@@ -1,6 +1,6 @@
-function init_data()
+function init_data(elementtype)
 global nNodes nElements nNodesElement nDoF nEdgesElement ...
-    Coord EBC NBC IEN f g h C Params grav;
+    Coord EBC NBC IEN f g h C Params grav faces;
 %parameters
 tol=1e-8;
 L  = Params.L;
@@ -31,17 +31,36 @@ for i = 1:length(A)
 end
 
 % Step 2 set NBCs - still needs work
-%h = spalloc(nEdgesElement,nElements,round(nElements/4));
-% X=X(IEN(1:8,:));
-% %nodes on NBC
-% H1 = abs(X)<tol;
-% H2 = abs(L-X) <tol;
-% % Faces on NBC - not sure how to define
-% for e=1:nElements
-%     for i=1:nEdgesElement
-%         j=mod(i,nEdgesElement)+1; % finds the next face or goes to first if at last
-%     end
-% end
+if (strcmpi(elementtype,'hex'))
+    X=X(IEN(1:8,:));
+    Y=Y(IEN(1:8,:));
+    Z=Z(IEN(1:8,:));
+    flag=4;
+end
+if (strcmpi(elementtype,'tet'))
+    X=X(IEN(1:4,:));
+    Y=Y(IEN(1:4,:));
+    Z=Z(IEN(1:4,:));
+    flag=3;
+end
+%find 6 faces of the body
+H1 = abs(X)<tol;
+H2 = abs(L-X) <tol;
+H3 = abs(Y+c)<tol;
+H4 = abs(Y-c)<tol;
+H5 = abs(Z+t)<tol;
+H6 = abs(Z-t)<tol;
+% % Faces on NBC 
+for e=1:nElements
+    for i=1:nEdgesElement
+        fvec=faces(1:flag,i);
+        if (H5(fvec,e)==1)
+            NBC(e,i)=5;
+        elseif (H6(fvec,e)==1)
+            NBC(e,i)=6;
+        end
+    end
+end
 
 C(:,1) = E;
 C(:,2) = v;

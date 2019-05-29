@@ -1,10 +1,28 @@
 function ProblemDefinition(elementtype,order) 
 global nDim nNodes nElements nNodesElement nDoF nEquations ...
-    nEdgesElement Coord ID IEN LM EBC Params f;
+    nEdgesElement Coord ID IEN LM EBC Params f faces;
 %Solution paramaters
 nDoF=3;
 nDim=3;
-nEdgesElement=6; %this is actually the number of faces in 3D
+if (strcmpi(elementtype,'hex'))
+    nEdgesElement=6; %this is actually the number of faces in 3D
+    switch order
+        case 1
+            faces=[1,2,3,4;1,5,6,2;1,4,8,5;2,3,7,6;3,4,8,7;5,6,7,8]';
+        case 2
+            faces=[1,2,3,4,9,10,11,12,21;1,5,6,2,17,13,18,9,23;1,4,8,5,12,20,16,17,25;...
+                2,3,7,6,10,19,14,18,26;3,4,8,7,11,20,15,19,24;5,6,7,8,13,14,15,16,22]';
+    end
+end
+if (strcmpi(elementtype,'tet'))
+    nEdgesElement=4; %this is actually the number of faces in 3D
+    switch order
+        case 1
+            faces=[1,2,3;1,2,4;1,4,3;2,3,4,]';
+        case 2
+            faces=[1,2,3,5,8,6;1,2,4,5,9,7;1,4,3,7,10,6;2,3,4,8,10,9]';
+    end
+end
 
 %Mesh parameters
 Params.Nx = 2^7;  % Number of elements along x-axis
@@ -20,8 +38,8 @@ Params.t =   1;      % Thickness of plate (0<z<t)
 Params.E = 10^7;     % Youngs Modulus
 Params.v = 0.25;     % Poisson Ratio
 
-% Parameters for Loading Conditions
-Params.P = 80;       % Shear load at beam end
+% Parameters for Traction Conditions
+Params.P = 0;       % traction on z boundaries
 
 %Mesh paramaters
 Nx = Params.Nx;
@@ -66,7 +84,7 @@ nNodes=size(Coord,1);
 nElements=size(IEN,2);
 nNodesElement=size(IEN,1);
 
-init_data();
+init_data(elementtype);
 
 %Allocate arrays
 ID=zeros(nDoF,nNodes);

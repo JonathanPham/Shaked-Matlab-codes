@@ -6,7 +6,10 @@ elementtype='hex'; %set hex or tet - note tet performs poorly for first order
 order=2; %set to 1 (linear) or 2 (quadratic) elements
 ProblemDefinition(elementtype,order);
 [K,F]=Assembly(elementtype,order);
-%global IEN;
+% permute reverse Cuthill-McKee
+[R, R2]=revCM(K);
+F=F(R);
+K=K(R,R);
 %% solve linear system
 d2=K\F; %to compare
 nmax=length(F);
@@ -20,6 +23,9 @@ nmax=length(F);
 d1=zeros(nmax,1);
 %d1=conj_g(K,d1,F,nmax,tol);
 d1=conj_diag_pre(K,d1,F,nmax,tol);
+%permute back
+d2=d2(R2);
+d1=d1(R2);
 mmx=max(d1-d2);
 %% constructing solution vector
 u=zeros(nNodes,nDoF);
@@ -42,7 +48,6 @@ Ix= 4/3*c^3*t;
 E = Params.E;
 grav=Params.grav;
 andef=grav*x.^2/24/Ix/L/E.*(2*L^2+(2*L-x).^2);
-
 figure
 plot(x,defl);
 hold on

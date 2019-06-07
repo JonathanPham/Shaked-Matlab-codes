@@ -10,14 +10,16 @@ ProblemDefinition(elementtype,order);
 %% solve linear system
 d2=K\F; %to compare
 nmax=length(F);
-% M=spalloc(nmax,nmax,3*nmax);
+% M=spalloc(nmax,nmax,3*nmax); %this is a left approximate that doesn't
+% work too well due to symmetry breaking.
 % for j=1:nmax
 %     M(j,:)=l_sparse_inverse(K,j,tol,nmax,1);
 % end
 % guess=M*F;
 % [d1]=gmres(M*K,guess,guess,nmax,tol);
 d1=zeros(nmax,1);
-d1=conj_g(K,d1,F,nmax,tol);
+%d1=conj_g(K,d1,F,nmax,tol);
+d1=conj_diag_pre(K,d1,F,nmax,tol);
 mmx=max(d1-d2);
 %% constructing solution vector
 u=zeros(nNodes,nDoF);

@@ -1,4 +1,4 @@
-function x=conj_g(A,x,b,nmax,tol) %checked this function, it works!
+function [x,niter]=conj_g(A,x,b,nmax,tol) %checked this function, it works!
 %note that b and x must be column vectors
 resn=b-A*x;
 p=resn;

@@ -1,31 +1,49 @@
 %% set up linear solve
 clear all
 global ID IEN nNodes nDoF EBC g Params Coord NBC; 
-tol=1e-8;
+tol=1e-10;
 elementtype='hex'; %set hex or tet - note tet performs poorly for first order
 order=2; %set to 1 (linear) or 2 (quadratic) elements
+rcm=1; % 1 to permute with reverse Cuthill-McKee, 0 otherwise
+method='minres';
+offdiags=0;
 ProblemDefinition(elementtype,order);
 [K,F]=Assembly(elementtype,order);
+%K=(K+K')/2;
 % permute reverse Cuthill-McKee
-[R, R2]=revCM(K);
-F=F(R);
-K=K(R,R);
+if rcm==1
+    [R, R2]=revCM(K);
+    F=F(R);
+    K=K(R,R);
+end
 %% solve linear system
 d2=K\F; %to compare
 nmax=length(F);
-% M=spalloc(nmax,nmax,3*nmax); %this is a left approximate that doesn't
-% work too well due to symmetry breaking.
-% for j=1:nmax
-%     M(j,:)=l_sparse_inverse(K,j,tol,nmax,1);
-% end
-% guess=M*F;
-% [d1]=gmres(M*K,guess,guess,nmax,tol);
-d1=zeros(nmax,1);
-%d1=conj_g(K,d1,F,nmax,tol);
-d1=conj_diag_pre(K,d1,F,nmax,tol);
+if (strcmpi(method,'minres'))
+    M=spalloc(nmax,nmax,3*nmax);
+    for j=1:nmax
+        M(j,:)=l_sparse_inverse(K,j,tol,nmax,offdiags);
+    end
+    M=(M+M')/2;
+    [ d1, istop, itn, rnorm, Arnorm, Anorm, Acond, ynorm ] =  minres( K, F, M, 0, 0, 0, nmax, tol );
+end
+if (strcmpi(method,'cgnopre'))
+    d1=zeros(nmax,1);
+    [d1,niter]=conj_g(K,d1,F,nmax,tol);
+end
+if (strcmpi(method,'cgdiag'))
+    d1=zeros(nmax,1);
+    [d1,niter]=conj_diag_pre(K,d1,F,nmax,tol);
+end
+if (strcmpi(method,'cgapprox'))
+    d1=zeros(nmax,1);
+    [d1,niter]=conj_multidiag_pre(K,d1,F,nmax,tol,offdiags);
+end
 %permute back
-d2=d2(R2);
-d1=d1(R2);
+if rcm==1
+    d2=d2(R2);
+    d1=d1(R2);   
+end
 mmx=max(d1-d2);
 %% constructing solution vector
 u=zeros(nNodes,nDoF);

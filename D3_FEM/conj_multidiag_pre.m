@@ -1,7 +1,10 @@
-function [x, niter]=conj_diag_pre(A,x,b,nmax,tol)
+function [x,niter]=conj_multidiag_pre(A,x,b,nmax,tol,offdiag)
 %note that b and x must be column vectors
-vals=diag(A);
-M=diag(1./(vals));
+M=spalloc(nmax,nmax,(2*offdiag+1)*nmax);
+for j=1:nmax
+     M(j,:)=l_sparse_inverse(A,j,tol,nmax,offdiag);
+end
+M=(M+M')/2;
 resn=b-A*x;
 zn=M*resn;
 p=zn;

@@ -1,14 +1,15 @@
 %% set up linear solve
 clear all
 global ID IEN nNodes nDoF EBC g Params Coord NBC; 
-tol=1e-10;
+tol=10^-6;
 elementtype='hex'; %set hex or tet - note tet performs poorly for first order
 order=2; %set to 1 (linear) or 2 (quadratic) elements
-rcm=1; % 1 to permute with reverse Cuthill-McKee, 0 otherwise
-method='minres';
-offdiags=0;
+rcm=0; % 1 to permute with reverse Cuthill-McKee, 0 otherwise
+method='cgblock';
+offdiags=0; % set number of offdiagonals, 0 is a Jacobi preconditioner
 ProblemDefinition(elementtype,order);
 [K,F]=Assembly(elementtype,order);
+blk=6; % sets size of blocks, 1 corresponds to Jacobi preconditioner
 %K=(K+K')/2;
 % permute reverse Cuthill-McKee
 if rcm==1
@@ -38,6 +39,10 @@ end
 if (strcmpi(method,'cgapprox'))
     d1=zeros(nmax,1);
     [d1,niter]=conj_multidiag_pre(K,d1,F,nmax,tol,offdiags);
+end
+if (strcmpi(method,'cgblock'))
+    d1=zeros(nmax,1);
+    [d1,niter]=conj_block(K,d1,F,nmax,tol,blk);
 end
 %permute back
 if rcm==1

@@ -25,12 +25,12 @@ if (strcmpi(elementtype,'tet'))
 end
 
 %Mesh parameters
-Params.Nx = 2^5;  % Number of elements along x-axis
+Params.Nx = 2^6;  % Number of elements along x-axis
 Params.Ny = 2^1;  % Number of elements along y-axis
 Params.Nz = 2^1;  % Number of elements along z-axis
 
 % Parameters for Plate Geometry
-Params.L = 2^7;      % Length of plate, i.e. (0 < x < L)
+Params.L = 2^8;      % Length of plate, i.e. (0 < x < L)
 Params.c =  1;      % Half-height of plate, i.e. (-c < y < c)
 Params.t =   1;      % Thickness of plate (0<z<t)
 

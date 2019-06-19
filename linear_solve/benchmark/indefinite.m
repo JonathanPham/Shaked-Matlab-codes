@@ -1,0 +1,9 @@
+%load('bcsstk32.mat');
+load('qa8fk.mat');
+A=Problem.A;
+n=length(A);
+b=sparse(1:n,1,1);
+tol=10^-8;
+%x=A\b;
+[x,niter]=conj_multidiag_pre(A,b,b,n,tol);
+%[x,niter]=conj_ichol(A,b,b,n,tol);

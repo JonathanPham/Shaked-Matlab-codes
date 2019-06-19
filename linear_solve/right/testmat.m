@@ -1,7 +1,7 @@
-%% gmres
+%% cg
 clear all;
 clc;
-n=2^20;
+n=2^10;
 A=gallery('tridiag',(1:n-1).^2/2,1+(1:n).^2,(1:n-1).^2/2);
 b=sparse(1:n,1,1);
 tol=eps(1);
@@ -14,11 +14,12 @@ offdiag=2;
 %toc;
 %% minres
 clear all;
-n=10^4;
-b=ones(n,1);
+clc;
+n=2^8;
+A=gallery('tridiag',(2:n),(-1).^(1:n).*(1:n).^2,(2:n));
+b=sparse(1:n,1,1);
 tol=eps(1);
-A=gallery('tridiag',(1:n-1).^2/2,1+[1:n],(1:n-1).^2/2);
-offdiag=0;
+offdiag=2;
 M=spalloc(n,n,(offdiag*2+1)*n);
 for j=1:n
     M(:,j)=r_sparse_inverse(A,j,tol,n,offdiag);

@@ -1,0 +1,13 @@
+clear all;
+syms x y z u u2 d_u d_u2 epsil sigma Cmat c L t E v;
+u=[cos(pi*x/L);cos(pi*y/c);cos(pi*z/t)];
+u2=[cos(pi*x/L),cos(pi*y/c),cos(pi*z/t)];
+d_u=[diff(u,x),diff(u,y),diff(u,z)];
+d_u2=[diff(u2,x);diff(u2,y);diff(u2,z)];
+%epsil=[-(pi*sin((pi*x)/L))/L;-(pi*sin((pi*y)/c))/c;(pi*sin((pi*z)/t))/t;0;0;0];
+epsil=diag(1/2*(d_u+d_u2));
+sigma1=1/E*(epsil(1)-v*epsil(2)-v*epsil(3));
+sigma2=1/E*(epsil(2)-v*epsil(1)-v*epsil(3));
+sigma3=1/E*(epsil(3)-v*epsil(1)-v*epsil(2));
+f=[diff(sigma1,x),diff(sigma2,y),diff(sigma3,z)];
+h=[sigma1,sigma2,sigma3];

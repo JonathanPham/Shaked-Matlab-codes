@@ -106,7 +106,7 @@ if show
    fprintf('\n itnlim =%8g    rtol  =%10.2e\n', itnlim,rtol)
 end
 
-istop = 0;   itn   = 0;   Arnorm=0; Anorm = 0;    Acond = 0;
+istop = 0;   itn   = 0;   Anorm = 0;    Acond = 0;
 rnorm = 0;   ynorm = 0;   done  = false;
 x     = zeros(n,1);
 

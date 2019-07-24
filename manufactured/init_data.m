@@ -22,9 +22,23 @@ X=Coord(:,1);
 Y=Coord(:,2);
 Z=Coord(:,3);
 
-A=find(abs(X)<tol);
+A=find(abs(L-X)<tol);
+A1=find(abs(c-Y)<tol);
+A2=find(abs(t-Z)<tol);
 for i = 1:length(A)
     a = A(i);   
+    EBC(a,1) = 1;
+    EBC(a,2) = 1;
+    EBC(a,3) =1; 
+end
+for i = 1:length(A1)
+    a = A1(i);   
+    EBC(a,1) = 1;
+    EBC(a,2) = 1;
+    EBC(a,3) =1; 
+end
+for i = 1:length(A2)
+    a = A2(i);   
     EBC(a,1) = 1;
     EBC(a,2) = 1;
     EBC(a,3) =1; 
@@ -46,18 +60,20 @@ end
 %find 6 faces of the body
 H1 = abs(X)<tol;
 H2 = abs(L-X) <tol;
-H3 = abs(Y+c)<tol;
+H3 = abs(Y)<tol;
 H4 = abs(Y-c)<tol;
-H5 = abs(Z+t)<tol;
+H5 = abs(Z)<tol;
 H6 = abs(Z-t)<tol;
 % % Faces on NBC 
 for e=1:nElements
     for i=1:nEdgesElement
         fvec=faces(1:flag,i);
-        if (H5(fvec,e)==1)
+        if (H1(fvec,e)==1)
+            NBC(e,i)=1;
+        elseif (H3(fvec,e)==1)
+            NBC(e,i)=3;
+        elseif (H5(fvec,e)==1)
             NBC(e,i)=5;
-        elseif (H6(fvec,e)==1)
-            NBC(e,i)=6;
         end
     end
 end

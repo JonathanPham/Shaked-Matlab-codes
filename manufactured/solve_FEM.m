@@ -5,7 +5,7 @@ tol=10^-8;
 elementtype='hex'; %set hex or tet - note tet performs poorly for first order
 order=2; %set to 1 (linear) or 2 (quadratic) elements
 rcm=0; % 1 to permute with reverse Cuthill-McKee, 0 otherwise
-method='cgapprox';
+method='cgichol';
 offdiags=0; % set number of offdiagonals, 0 is a Jacobi preconditioner
 ProblemDefinition(elementtype,order);
 [K,F]=Assembly(elementtype,order);
@@ -62,11 +62,13 @@ I=(EBC==0);
 u(I)=d1(ID(I));
 u(~I)=g(~I);
 % post processing and comparing to analytical solution
+indx=Coord(:,1)==0;
 indy=Coord(:,2)==0;
 indz=Coord(:,3)==0;
 ind=indy&indz;
 x = Coord(ind,1);
-defl=u(ind,2);
+defl=u(ind,1);
+%%
 [x, ind]=sort(x);
 defl=defl(ind);
 Nx = Params.Nx;

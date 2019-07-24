@@ -1,9 +1,11 @@
 function [x,niter]=conj_multidiag_pre(A,x,b,nmax,tol)
 %note that b and x must be column vectors
+lfil=8;
 tic
-M=spalloc(nmax,nmax,1660579);
+M=spalloc(nmax,nmax,lfil*nmax);
 for j=1:nmax
      M(:,j)=r_sparse_inverse(A,j,tol,nmax);
+     %M(:,j)=new_r_sparse_inverse(A,j,tol,nmax,lfil);
 end
 M=(M+M')/2;
 toc;

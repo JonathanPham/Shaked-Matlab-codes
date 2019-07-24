@@ -2,6 +2,7 @@ function [x,niter]=conj_ichol(A,x,b,nmax,tol)
 %note that b and x must be column vectors
 tic
 L=ichol(A);
+nnz(L)/nmax
 toc;
 tic;
 resn=b-A*x;

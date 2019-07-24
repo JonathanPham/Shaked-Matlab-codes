@@ -22,9 +22,9 @@ d2=K\F; %to compare
 %%
 nmax=length(F);
 if (strcmpi(method,'minres'))
-    M=spalloc(nmax,nmax,3*nmax);
+    M=spalloc(nmax,nmax,sum(sum(abs(K)>tol)));
     for j=1:nmax
-        M(j,:)=l_sparse_inverse(K,j,tol,nmax,offdiags);
+        M(j,:)=r_sparse_inverse(K,j,tol,nmax);
     end
     M=(M+M')/2;
     [ d1, istop, itn, rnorm, Arnorm, Anorm, Acond, ynorm ] =  minres( K, F, M, 0, 0, 0, nmax, tol );

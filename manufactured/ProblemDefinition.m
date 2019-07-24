@@ -25,17 +25,18 @@ if (strcmpi(elementtype,'tet'))
 end
 
 %Mesh parameters
-Params.Nx = 2^5;  % Number of elements along x-axis
-Params.Ny = 2^1;  % Number of elements along y-axis
-Params.Nz = 2^1;  % Number of elements along z-axis
+Params.Nx = 2^4;  % Number of elements along x-axis
+Params.Ny = 2^4;  % Number of elements along y-axis
+Params.Nz = 2^4;  % Number of elements along z-axis
 
 % Parameters for Plate Geometry
-Params.L = 2^7;      % Length of plate, i.e. (0 < x < L)
+Params.L = 1;      % Length of plate, i.e. (0 < x < L)
 Params.c =  1;      % Half-height of plate, i.e. (-c < y < c)
 Params.t =   1;      % Thickness of plate (0<z<t)
 
 % Parameters for Material Properties
-Params.E = 10^7;     % Youngs Modulus
+Params.E = 10^7;% Youngs Modulus
+%Params.E = 1;
 Params.v = 0;     % Poisson Ratio
 
 % Parameters for forces
@@ -54,13 +55,13 @@ t=   Params.t;
 
 if (strcmpi(elementtype,'hex'))
     x = linspace(0,L,order*Nx+1);
-    y = linspace(-c,c,order*Ny+1);
-    z = linspace(-t,t,order*Nz+1);
+    y = linspace(0,c,order*Ny+1);
+    z = linspace(0,t,order*Nz+1);
 end
 if (strcmpi(elementtype,'tet'))
     x = linspace(0,L,Nx+1);
-    y = linspace(-c,c,Ny+1);
-    z = linspace(-t,t,Nz+1);
+    y = linspace(0,c,Ny+1);
+    z = linspace(0,t,Nz+1);
 end
 [X,Y,Z] = meshgrid(x,y,z);
 X = permute(X,[2 1 3]);

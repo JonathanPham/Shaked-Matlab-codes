@@ -25,7 +25,7 @@ if (strcmpi(elementtype,'tet'))
 end
 
 %Mesh parameters
-Params.Nx = 2^5;  % Number of elements along x-axis
+Params.Nx = 2^10;  % Number of elements along x-axis
 Params.Ny = 2^1;  % Number of elements along y-axis
 Params.Nz = 2^1;  % Number of elements along z-axis
 

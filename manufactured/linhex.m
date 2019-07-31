@@ -1,6 +1,6 @@
 function [k_e, f_e, f_g, f_h]=linhex(e,elementtype,order)
 global f  g  h  C  IEN  nDoF  nDim  nNodesElement...
-    nEdgesElement  elementType  Coord NBC;
+    nEdgesElement  elementType  Coord NBC  EBC;
 %allocate
 k_e = zeros(nNodesElement*nDoF,nNodesElement*nDoF);
 f_e = zeros(nNodesElement*nDoF,1);
@@ -108,6 +108,17 @@ elseif (strcmpi(elementtype,'tet'))
 end
 
 % compute f_g
+if EBC==1
+    x = Coord(IEN(:,e),1);
+    y = Coord(IEN(:,e),2);
+    z=Coord(IEN(:,e),3);
+    L=Params.L;
+    t=Params.t;
+    c=Params.c;
+    g(IEN(:,e),1)=cos(pi*x/2/L);
+    g(IEN(:,e),2)=cos(pi*y/2/c);
+    g(IEN(:,e),3)=cos(pi*z/2/t);
+end
 g_e=g(IEN(:,e),:)';
 f_g=-k_e*g_e(:);
 end

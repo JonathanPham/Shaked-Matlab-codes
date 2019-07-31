@@ -4,8 +4,8 @@ tic
 lfil=70;
 M=spalloc(nmax,nmax,lfil*nmax);
 for j=1:nmax
-     %M(:,j)=r_sparse_inverse(A,j,tol,nmax);
-     M(:,j)=new_r_sparse_inverse(A,j,tol,nmax,lfil);
+     M(:,j)=r_sparse_inverse(A,j,tol,nmax);
+     %M(:,j)=new_r_sparse_inverse(A,j,tol,nmax,lfil);
 end
 M=(M+M')/2;
 toc;

@@ -1,0 +1,26 @@
+####################
+## Makefile Setup ##
+####################
+EXEC=main
+MPICC?=mpicc
+DEPS=inv_sp.hpp
+####################
+## Makefile Rules ##
+####################
+
+# Suffix replacement rules
+#   $^: the name of the prereqs of the rule
+#   $<: the name of the first prereq of the rule
+#   $@: the name of the target of the rule
+
+# 'make' - default rule
+all: $(EXEC)
+
+# Default rule for creating an exec of $(EXEC) from a .o file
+main: main.cpp
+	${MPICC} -o main main.cpp inv_sp.hpp matvecops.hpp
+
+clean:
+	-$(RM) *.o $(EXEC)
+
+# Define rules that do not actually generate the corresponding file

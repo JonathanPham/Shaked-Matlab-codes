@@ -17,7 +17,7 @@ if rcm==1
     F=F(R);
     K=K(R,R);
 end
-%% solve linear system
+% solve linear system
 d2=K\F; %to compare
 %%
 nmax=length(F);
@@ -66,8 +66,15 @@ indx=Coord(:,1)==0;
 indy=Coord(:,2)==0;
 indz=Coord(:,3)==0;
 ind=indy&indz;
-x = Coord(ind,1);
-defl=u(ind,1);
+defl=u(ind,:);
+%%
+L  = Params.L;
+c  = Params.c;
+t=   Params.t;
+x = Coord(:,1);
+y=  Coord(:,2);
+z=  Coord(:,3);
+anu=cos(pi*x/2/L).*cos(pi*y/2/c).*cos(pi*z/2/t);
 %%
 [x, ind]=sort(x);
 defl=defl(ind);
